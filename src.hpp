@@ -35,7 +35,7 @@ void Calculate(std::vector<Matrix *> keys, std::vector<Matrix *> values,
       gpu_sim.MoveMatrixToSharedMem(keys[j]);
 
       // Transpose K[j] for multiplication: K^T has shape [d, 1]
-      gpu_sim.Transpose(keys[j]);
+      gpu_sim.Transpose(keys[j], Position::kInSharedMemory);
 
       // Compute Q * K^T: [i+1, d] * [d, 1] = [i+1, 1]
       Matrix* qk = matrix_memory_allocator.Allocate("qk_" + std::to_string(j));
@@ -84,7 +84,7 @@ void Calculate(std::vector<Matrix *> keys, std::vector<Matrix *> values,
     gpu_sim.MoveMatrixToGpuHbm(sum_result);
 
     gpu_sim.Run(false, &matrix_memory_allocator);
-    rater.CommitAnswer(sum_result);
+    rater.CommitAnswer(*sum_result);
     /*********************  End of your code *********************/
   
     /*
