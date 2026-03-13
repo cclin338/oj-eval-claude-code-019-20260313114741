@@ -87,7 +87,7 @@ void Calculate(std::vector<Matrix *> keys, std::vector<Matrix *> values,
     Matrix* softmax_result = nullptr;
     for (size_t row = 0; row <= i; ++row) {
       Matrix* exp_row = matrix_memory_allocator.Allocate("exp_row_" + std::to_string(row));
-      gpu_sim.GetRow(exp_qk, row, exp_row);
+      gpu_sim.GetRow(exp_qk, row, exp_row, Position::kInSharedMemory);
 
       Matrix* row_sum = matrix_memory_allocator.Allocate("row_sum_" + std::to_string(row));
       gpu_sim.Sum(exp_row, row_sum);
